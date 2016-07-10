@@ -6,6 +6,8 @@
 * 可以格式化输出Json
 
 ## 如何使用
+直接复制LogUtils.java文件到项目下即可
+
 ### 初始化
     LogUtils.init(LogUtils.LEVEL_ALL, "Log");
 
