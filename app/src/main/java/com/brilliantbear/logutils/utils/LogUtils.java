@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 /**
  * Created by Bear on 2016-7-10.
  */
@@ -36,43 +38,43 @@ public class LogUtils {
     }
 
 
-    public static void V(String msg) {
+    public static void V(Object msg) {
         printText(LEVEL_VERBOSE, null, msg);
     }
 
-    public static void V(String tag, String msg) {
+    public static void V(String tag, Object msg) {
         printText(LEVEL_VERBOSE, tag, msg);
     }
 
-    public static void D(String msg) {
+    public static void D(Object msg) {
         printText(LEVEL_DEBUG, null, msg);
     }
 
-    public static void D(String tag, String msg) {
+    public static void D(String tag, Object msg) {
         printText(LEVEL_DEBUG, tag, msg);
     }
 
-    public static void I(String msg) {
+    public static void I(Object msg) {
         printText(LEVEL_INFO, null, msg);
     }
 
-    public static void I(String tag, String msg) {
+    public static void I(String tag, Object msg) {
         printText(LEVEL_INFO, tag, msg);
     }
 
-    public static void W(String msg) {
+    public static void W(Object msg) {
         printText(LEVEL_WARM, null, msg);
     }
 
-    public static void W(String tag, String msg) {
+    public static void W(String tag, Object msg) {
         printText(LEVEL_WARM, tag, msg);
     }
 
-    public static void E(String msg) {
+    public static void E(Object msg) {
         printText(LEVEL_ERROR, null, msg);
     }
 
-    public static void E(String tag, String msg) {
+    public static void E(String tag, Object msg) {
         printText(LEVEL_ERROR, tag, msg);
     }
 
@@ -113,13 +115,20 @@ public class LogUtils {
         return "[(" + className + ":" + lineNumber + ")#" + methodName + "]";
     }
 
-    private static void printText(int level, String tag, String msg) {
+    private static void printText(int level, String tag, Object msg) {
         if (level < mLevel)
             return;
 
         String headInfo = getHeadInfo();
 
-        println(level, tag, headInfo + " " + msg);
+        String message;
+        if(msg.getClass().isArray()){
+            message = Arrays.deepToString((Object[])msg);
+        }else{
+            message = msg.toString();
+        }
+
+        println(level, tag, headInfo + " " + message);
     }
 
     private static void println(int level, String tag, String msg) {
