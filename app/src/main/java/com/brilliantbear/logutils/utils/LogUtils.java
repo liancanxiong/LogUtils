@@ -24,6 +24,7 @@ public class LogUtils {
     public static final int LEVEL_NONE = 0x06;
 
     private static final String DEFAULT_TAG = "LogUtils";
+    private static final int MIN_STACK_OFFSET = 2;
     private static int mLevel = LEVEL_NONE;
 
     private static String mTag;
@@ -90,15 +91,25 @@ public class LogUtils {
         printJson(level, tag, msg);
     }
 
+    private static int getStackOffset(StackTraceElement[] stackTrace) {
+        if (null != stackTrace) {
+            for (int i = MIN_STACK_OFFSET; i < stackTrace.length; i++){
+                if(!stackTrace[i].getClassName().equals(LogUtils.class.getName())){
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
     private static String getHeadInfo() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 
-//        for (int i = 0; i < stackTrace.length; i++) {
-//            Log.d("log", i + " : " + stackTrace[i].getClassName() + "   " + stackTrace[i].getMethodName());
-//        }
-
-        int i = 5;
-        StackTraceElement element = stackTrace[i];
+        int index = getStackOffset(stackTrace);
+        if(index == -1){
+            return "[Get Info Error]";
+        }
+        StackTraceElement element = stackTrace[index];
         String className = element.getClassName();
         if (className.contains(".")) {
             String[] names = className.split("\\.");
@@ -122,9 +133,9 @@ public class LogUtils {
         String headInfo = getHeadInfo();
 
         String message;
-        if(msg.getClass().isArray()){
-            message = Arrays.deepToString((Object[])msg);
-        }else{
+        if (msg.getClass().isArray()) {
+            message = Arrays.deepToString((Object[]) msg);
+        } else {
             message = msg.toString();
         }
 
